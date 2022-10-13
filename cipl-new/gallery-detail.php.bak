@@ -1,0 +1,284 @@
+<?php
+
+include_once("connect.php");
+
+?>
+
+<!DOCTYPE HTML>
+
+<html lang="en">
+
+   <head>
+
+      <meta charset="UTF-8">
+
+      <title>Corporate Infotech Pvt. Ltd. (CIPL) </title>
+
+      <meta name="viewport" content="width=device-width">
+
+      <!-- Include All CSS here-->
+
+      <link rel="stylesheet" href="css/bootstrap.css"/>
+
+      <link rel="stylesheet" href="css/owl.carousel.css"/>
+
+      <link rel="stylesheet" href="css/owl.theme.css"/>
+
+      <link rel="stylesheet" href="css/animate.css"/>
+
+      <link rel="stylesheet" href="css/lightcase.css"/>
+
+      <link rel="stylesheet" href="css/font-awesome.min.css"/>
+
+      <link rel="stylesheet" href="css/line-awesome.css"/>
+
+      <link rel="stylesheet" href="css/nounicon.css"/>
+
+      <!-- Revolution Slider Setting CSS -->
+
+      <link rel="stylesheet" href="css/settings.css"/>
+
+      <link rel="stylesheet" href="css/preset.css"/>
+
+      <link rel="stylesheet" href="css/theme.css"/>
+
+      <link rel="stylesheet" href="css/responsive.css"/>
+	  <link rel="stylesheet" type="text/css" href="dist/css/style.css">
+
+      <!-- End Include All CSS -->
+
+      <!-- Favicon Icon -->
+
+      <link rel="icon" type="image/png" href="images/favi.png">
+
+      <!-- Favicon Icon -->
+	  <style>
+	  
+	  .nav-justified {
+    width: 100%;
+}
+@media (min-width: 768px)
+.nav-justified>li {
+    display: table-cell;
+    width: 1%;
+}
+
+
+@media (min-width: 768px)
+.nav-justified>li>a {
+    margin-bottom: 0;
+}
+.nav-justified>li>a {
+    margin-bottom: 5px;
+    text-align: center;
+}
+.nav-pills>li>a {
+    border-radius: 4px;
+}
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+	.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+    color: #fff;
+    background-color: #337ab7;
+}
+#myTabs li a.active{background: #0486c1;
+    color: #fff;
+}  
+	  
+	  </style>
+	  
+
+   </head>
+
+   <body>
+
+      <!-- Preloader Start -->
+
+      <div class="preloader">
+
+         <div class="preloader-inner">
+
+            <div class="loader-logo"><img src="images/preloder.gif" width="100px" alt="CIPL"></div>
+
+         </div>
+
+      </div>
+
+      <?php include("header.php"); ?>
+
+      <section class="page_banner_gallery"></section>
+
+      <section class="blog_section">
+
+         <div class="container">
+		 
+		 
+<div class="row">
+
+               <div class="col-lg-6 offset-lg-3 text-center noPadding">
+
+                  <h5 class="text-uppercase sec_sub_title">ENENTS & INSIGHTS</h5>
+				  <h2 class="sec_title"><?php echo $_GET['id'];?></h2>
+
+               </div>
+
+            </div>
+            
+			<div class="row">
+				
+					<?php
+						$id = $_GET['id']; 
+$fd ='';					
+						$qw = $conn->prepare("Select group_concat(id) as id from gallery where title = '".$id."' and status =1");	
+						$qw->execute();
+						
+						$lim = 12;
+						//$start_from = $offset * $lim;
+						//$where_now = $start_from + $lim;
+						//$limit = 'limit'.$start_from.','.$lim.'';
+						$t_p = $qw->rowCount(); print_r($t_p);
+						if($qw->rowCount() > 0){
+							$total_pages = round($t_p/$lim); print_r($total_pages);
+							$rw = $qw->fetchAll(PDO::FETCH_ASSOC);
+							foreach($rw as $rt){
+								$images_id=explode(",",$rt['id']); 
+								//$count = count($images_id); print_r($count);
+							
+								foreach($images_id as $name){
+									$qw = $conn->prepare("select group_concat(name) as names from files where title=".$name." and status=1");
+									$qw->execute();
+									if($qw->rowCount() > 0){
+										$row = $qw->fetchAll(PDO::FETCH_ASSOC);
+										foreach($row as $ms){
+											//print_r($row);
+											$images=explode(",",$ms['names']);
+											$i=0;
+
+			
+
+			while($i<count($images) && !empty($images[$i]))
+
+			{
+				//print_r($images[$i]);
+											$fd .='<div class="col-md-4">
+													<a href="#">
+													<div class="singleblog bg-shadws">
+														<img src="admin/php/files/'.$images[$i].'" alt="">
+													</div>
+													</a>
+												</div>';
+												++$i;
+										}
+										}
+										echo $fd;
+									}
+									else{
+										echo "No images to upload";
+									}
+								
+									
+								}
+								
+							}
+						}
+								
+					?>
+					
+					<!---<ul id="myTabs" class="nav nav-pills nav-justified" role="tablist" data-tabs="tabs">
+						<li><a href="#Commentary" data-toggle="tab" class="active">Commentary</a></li>
+						<li><a href="#Videos" data-toggle="tab">Videos</a></li>
+						<li><a href="#Events" data-toggle="tab">Events</a></li>
+					</ul>
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane fade in active show" id="Commentary">Commentary WP_Query goes here.</div>
+						<div role="tabpanel" class="tab-pane fade" id="Videos">Videos WP_Query goes here.</div>
+						<div role="tabpanel" class="tab-pane fade" id="Events">Events WP_Query goes here.</div>
+					</div>--->
+				
+			</div>
+			
+         </div>
+
+      </section>
+
+      <?php include("inquiry.php"); ?>
+
+      <?php include("footer.php"); ?>
+
+      <!-- Back To Top Button -->
+
+      <a href="javascript:void(0)" id="backtotop"><i class="la la-arrow-up"></i></a>
+
+      <!-- Back To Top Button -->
+
+      <!-- Include All JS -->
+
+      <script src="js/jquery.js"></script>
+
+      <script src="js/bootstrap.min.js"></script>
+
+      <script src="js/owl.carousel.js"></script>
+
+      <script src="js/jquery.appear.js"></script>
+
+      <script src="js/jquery.shuffle.min.js"></script>
+
+      <script src="js/lightcase.js"></script>
+
+      <script src="js/gmaps.js"></script>
+
+      <script src="https://maps.google.com/maps/api/js?key=AIzaSyBJtPMZ_LWZKuHTLq5o08KSncQufIhPU3o"></script>
+
+      <!-- Slider Revolution Main Files -->
+
+      <script src="js/jquery.themepunch.tools.min.js"></script>
+
+      <script src="js/jquery.themepunch.revolution.min.js"></script>
+
+      <!-- Slider Revolution Extension -->  
+
+      <script src="js/extensions/revolution.extension.actions.min.js"></script>
+
+      <script src="js/extensions/revolution.extension.carousel.min.js"></script>
+
+      <script src="js/extensions/revolution.extension.kenburn.min.js"></script>
+
+      <script src="js/extensions/revolution.extension.layeranimation.min.js"></script>
+
+      <script src="js/extensions/revolution.extension.migration.min.js"></script>
+
+      <script src="js/extensions/revolution.extension.navigation.min.js"></script>
+
+      <script src="js/extensions/revolution.extension.parallax.min.js"></script>
+
+      <script src="js/extensions/revolution.extension.slideanims.min.js"></script>
+
+      <script src="js/extensions/revolution.extension.video.min.js"></script>
+
+      <script src="js/theme.js"></script>
+	  
+	  <script>
+	  					
+						$(document).on("click", "#myTabs li a", function(){
+							var sd = $(this).attr("href").replace("#" ,""); 
+							$(".tab-pane").removeClass("active show");
+							$('.tab-pane[id*="'+sd+'"]').addClass("active show");
+							/*console.log(match);
+							  if($match.length){
+								$(".tab-pane").removeClass('active show');
+								$(".tab-pane").addClass('active show');
+								return false; 
+							  }*/
+						
+						})
+						
+					</script>
+
+      <!-- Include All JS -->
+
+   </body>
+
+</html>
